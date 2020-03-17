@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         if (requestCode==0){
             if (resultCode==CommonStatusCodes.SUCCESS) {
                 if (data != null) {
-                    var barcode = data.getParcelableExtra<Barcode>("barcode")
-                    barcodeResult.setText(barcode.displayValue)
+                    var barcode = data.getStringExtra("barcode")
+                    barcodeResult.setText(barcode)
                 } else {
                     barcodeResult.setText("No barcode found")
                 }

@@ -15,8 +15,8 @@ class Result : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
         barcodeResult = findViewById(R.id.barcodeText)
-        var barcode = intent.getParcelableExtra<Barcode>("barcode")
-        barcodeResult.setText(barcode.displayValue)
+        val barcode = intent.getStringExtra("barcode")
+        barcodeResult.text = barcode
     }
 
     fun goBack(v : View){

@@ -2,11 +2,14 @@ package com.sortingrocks.sorter
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.CameraSource
@@ -18,11 +21,14 @@ import com.google.android.gms.vision.barcode.BarcodeDetector
 class ScanBarcodeActivity : AppCompatActivity() {
         lateinit var cameraPreview : SurfaceView
         lateinit var intentResult : Intent
+        lateinit var intentWrite : Intent
+        var onlyOnce = 0 //to be sure that window is activated only once
         override fun onCreate(savedInstanceState: Bundle?)
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan_barcode)
         intentResult = Intent(this, Result::class.java)
+            intentWrite = Intent(this, WriteBarcodeActivity::class.java)
             cameraPreview = findViewById(R.id.camera_preview)
             createCameraSource();
         }
@@ -32,8 +38,14 @@ class ScanBarcodeActivity : AppCompatActivity() {
         startActivityForResult(intentBack, 0)
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     fun goToResult(){
-        startActivityForResult(intentResult, 0)
+        startActivity(intentResult)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+    fun goToWrite(v : View){
+        startActivity(intentWrite)
     }
 
     private fun createCameraSource() {
@@ -58,13 +70,15 @@ class ScanBarcodeActivity : AppCompatActivity() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
+            @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
             override fun receiveDetections(p0: Detector.Detections<Barcode>?) {
                 var barcodes : SparseArray<Barcode> = p0!!.detectedItems
-                if (barcodes.size()>0){
-                    intentResult.putExtra("barcode", barcodes.valueAt(0)) //getting only last barcode
+                if (barcodes.size()>0 && onlyOnce==0){
+                    intentResult.putExtra("barcode", barcodes.valueAt(0).displayValue.toString()) //getting only last barcode
                     setResult(CommonStatusCodes.SUCCESS, intentResult)
-                    goToResult()
                     finish()
+                    goToResult()
+                    onlyOnce+=1
                 }
             }
 

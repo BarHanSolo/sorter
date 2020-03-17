@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Result"></activity>
+        <activity android:name=".WriteBarcodeActivity"></activity>
+        <activity android:name=".Result" />
         <activity
             android:name=".MainActivity"
             android:label="Main Menu">
@@ -23,7 +24,7 @@
         </activity>
         <activity
             android:name=".ScanBarcodeActivity"
-            android:label="Scan Barcode"></activity>
+            android:label="Scan Barcode" />
     </application>
 
 </manifest>
