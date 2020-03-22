@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "556823006593",
+    "firebase_url": "https://sorting-rocks.firebaseio.com",
+    "project_id": "sorting-rocks",
+    "storage_bucket": "sorting-rocks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556823006593:android:f4da785ac44a4c0e782c80",
+        "android_client_info": {
+          "package_name": "com.sortingrocks.sorter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556823006593-q58ucais3lopks727al9n8tp5d6fi0md.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-7tyRJzffAXR29S7eB6hi9SY7SuFvUgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556823006593-q58ucais3lopks727al9n8tp5d6fi0md.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

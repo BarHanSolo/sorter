@@ -15,7 +15,7 @@
         <activity android:name=".Result" />
         <activity
             android:name=".MainActivity"
-            android:label="Main Menu">
+            android:label="Sorting Rocks">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
