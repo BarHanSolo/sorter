@@ -20,22 +20,32 @@ import com.google.android.gms.vision.barcode.BarcodeDetector
 
 class ScanBarcodeActivity : AppCompatActivity() {
         lateinit var cameraPreview : SurfaceView
+        lateinit var intentForm : Intent
         lateinit var intentResult : Intent
         lateinit var intentWrite : Intent
+        lateinit var goal : String
         var onlyOnce = 0 //to be sure that window is activated only once
         override fun onCreate(savedInstanceState: Bundle?)
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan_barcode)
-        intentResult = Intent(this, Result::class.java)
+            intentForm = Intent(this, FormToAddNewProduct::class.java)
+            intentResult = Intent(this, Result::class.java)
             intentWrite = Intent(this, WriteBarcodeActivity::class.java)
+            goal = intent.getStringExtra("goal")  //are we here to "scan" product or to "add" a new one
+
             cameraPreview = findViewById(R.id.camera_preview)
-            createCameraSource();
+            createCameraSource()
         }
 
     fun goBack(v : View){
         var intentBack = Intent(this, MainActivity::class.java)
         startActivityForResult(intentBack, 0)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+    fun goToForm(){
+        startActivity(intentForm)
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -75,9 +85,14 @@ class ScanBarcodeActivity : AppCompatActivity() {
                 var barcodes : SparseArray<Barcode> = p0!!.detectedItems
                 if (barcodes.size()>0 && onlyOnce==0){
                     intentResult.putExtra("barcode", barcodes.valueAt(0).displayValue.toString()) //getting only last barcode
+                    intentForm.putExtra("barcode", barcodes.valueAt(0).displayValue.toString()) //getting only last barcode
                     setResult(CommonStatusCodes.SUCCESS, intentResult)
                     finish()
-                    goToResult()
+                    if (goal=="scan"){
+                        goToResult()
+                    } else if (goal=="add"){
+                        goToForm()
+                    }
                     onlyOnce+=1
                 }
             }

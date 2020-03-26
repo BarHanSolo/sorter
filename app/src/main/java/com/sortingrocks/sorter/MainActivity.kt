@@ -28,8 +28,16 @@ class MainActivity : AppCompatActivity() {
         barcodeResult = findViewById(R.id.barcode_result)
     }
     fun scanBarcode(v: View) {
+        var buttonPressed = v.context.resources.getResourceEntryName(v.id)
         var intent = Intent(this, ScanBarcodeActivity::class.java)
-        startActivityForResult(intent, 0)
+        if (buttonPressed=="scanButton"){
+            intent.putExtra("goal", "scan")
+            startActivityForResult(intent, 0)
+        } else if (buttonPressed=="buttonAdd"){
+            intent.putExtra("goal", "add")
+            startActivityForResult(intent, 0)
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
