@@ -2,21 +2,16 @@ package com.sortingrocks.sorter
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
-import com.google.type.Date
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -27,6 +22,7 @@ class FormToAddNewProduct : AppCompatActivity() {
     lateinit var uploadedPhoto : ByteArray
     lateinit var storage : FirebaseStorage
     lateinit var storageReference : StorageReference
+    lateinit var typeWaste : String
     val REQUEST_IMAGE_CAPTURE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,27 +35,54 @@ class FormToAddNewProduct : AppCompatActivity() {
         var uniqueID = UUID.randomUUID().toString()
         storageReference = storage.getReference(uniqueID)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         barcodeResult = findViewById(R.id.barcodeText)
         barcode = intent.getStringExtra("barcode")
         barcodeResult.text = barcode
 
+        //establishing type waste spinner
+        val spinner: Spinner = findViewById(R.id.spinnerType)
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.typeWaste,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(R.layout.custom_spinner)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+        }
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                typeWaste = parent?.getItemAtPosition(position).toString()
+            }
+
+        }
+
     }
 
-    fun goBack() {
+    fun goBack(v: View) {
         var intentBack = Intent(this, MainActivity::class.java)
         startActivityForResult(intentBack, 0)
     }
 
     fun uploadToDatabase(view: View) {
-        //data prepering
+        //data preparing
         val nameText = findViewById<EditText>(R.id.editTextName)
-        val typeText = findViewById<EditText>(R.id.editTextType)
         val descriptionText = findViewById<EditText>(R.id.editTextDescription)
         val name = nameText.text.toString()
-        val type = typeText.text.toString()
         val description = descriptionText.text.toString()
         var url : String
         //photo uploading
+        if (!::uploadedPhoto.isInitialized){
+            Toast.makeText(getApplicationContext(),"Take a photo first",Toast.LENGTH_SHORT).show()
+            return
+        }
         storageReference.putBytes(uploadedPhoto).addOnFailureListener {
             // failure
             Log.w("TAG", "Error adding photo")
@@ -71,15 +94,15 @@ class FormToAddNewProduct : AppCompatActivity() {
                 val newProduct = hashMapOf(
                     "barcode" to barcode,
                     "name" to name,
-                    "type" to type,
+                    "type" to typeWaste,
                     "description" to description,
                     "address" to url
                 )
                 //data uploading; if success, closing
                 db.add(newProduct).addOnSuccessListener { documentReference ->
                         Log.d("TAG", "DocumentSnapshot written with ID: ${documentReference.id}")
-                        Toast.makeText(getApplicationContext(),"The product has been added",Toast.LENGTH_SHORT).show();
-                        goBack()
+                        Toast.makeText(getApplicationContext(),"The product has been added",Toast.LENGTH_SHORT).show()
+                        goBack(view)
                     }
                     .addOnFailureListener { e ->
                         Log.w("TAG", "Error adding document", e)
@@ -103,7 +126,6 @@ class FormToAddNewProduct : AppCompatActivity() {
             val baos = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             uploadedPhoto = baos.toByteArray()
-            //imageView.setImageBitmap(imageBitmap)
         }
     }
 }

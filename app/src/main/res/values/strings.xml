@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">sorter</string>
+    <string name="app_name">Sorting Rocks</string>
+    <string-array name="typeWaste">
+        <item>plastic</item>
+        <item>brown glass</item>
+        <item>green glass</item>
+        <item>transparent glass</item>
+        <item>paper</item>
+        <item>returnable</item>
+        <item>metal</item>
+        <item>bio</item>
+    </string-array>
 </resources>

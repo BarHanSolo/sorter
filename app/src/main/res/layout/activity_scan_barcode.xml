@@ -4,7 +4,7 @@
     android:padding="16dp"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:onClick="goToWrite"
             android:text="Write manually" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <SurfaceView
         android:id="@+id/camera_preview"

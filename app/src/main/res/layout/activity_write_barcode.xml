@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="16dp">
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -35,7 +35,7 @@
                 android:onClick="goToScan"
                 android:text="Scan" />
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <EditText
             android:id="@+id/barcodeWriter"

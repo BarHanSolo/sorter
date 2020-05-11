@@ -12,9 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FormToAddNewProduct"></activity>
-        <activity android:name=".WriteBarcodeActivity" />
-        <activity android:name=".Result" />
+        <activity android:name=".FormToAddNewProduct"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".WriteBarcodeActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".Result"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MainActivity"
             android:label="Sorting Rocks">
@@ -26,6 +29,7 @@
         </activity>
         <activity
             android:name=".ScanBarcodeActivity"
+            android:parentActivityName=".MainActivity"
             android:label="Scan Barcode" />
     </application>
 

@@ -1,14 +1,10 @@
 package com.sortingrocks.sorter
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseArray
-import android.view.SurfaceHolder
-import android.view.SurfaceView
-import android.view.View
+import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -29,10 +25,12 @@ class ScanBarcodeActivity : AppCompatActivity() {
         {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_scan_barcode)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
             intentForm = Intent(this, FormToAddNewProduct::class.java)
             intentResult = Intent(this, Result::class.java)
             intentWrite = Intent(this, WriteBarcodeActivity::class.java)
             goal = intent.getStringExtra("goal")  //are we here to "scan" product or to "add" a new one
+            intentWrite.putExtra("goal", goal)
 
             cameraPreview = findViewById(R.id.camera_preview)
             createCameraSource()
@@ -54,7 +52,7 @@ class ScanBarcodeActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-    fun goToWrite(v : View){
+    fun goToWrite(v: View?){
         startActivity(intentWrite)
     }
 
@@ -98,5 +96,26 @@ class ScanBarcodeActivity : AppCompatActivity() {
             }
 
         })
+    }
+    //menu handling
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.scan_options_menu, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.getItem(1)?.setVisible(false)
+        return super.onPrepareOptionsMenu(menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.manual -> {
+                goToWrite(null)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

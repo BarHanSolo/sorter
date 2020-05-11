@@ -3,8 +3,8 @@ package com.sortingrocks.sorter
 import android.app.ActionBar
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +13,11 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
-import com.google.android.gms.common.api.CommonStatusCodes
-import com.google.android.gms.vision.barcode.Barcode
 import com.google.firebase.firestore.FirebaseFirestore
+
 
 class Result : AppCompatActivity() {
     lateinit var barcodeResult : TextView
@@ -27,10 +26,13 @@ class Result : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
         barcodeResult = findViewById(R.id.barcodeText)
-        val barcode = intent.getStringExtra("barcode")
-        barcodeResult.text = barcode
+        var textExtraColor = getResources().getColor(R.color.secondaryLightColor);
+        val barcode =intent.getStringExtra("barcode")
+        val barcodeTextHtml = "<font color="+textExtraColor+">Barcode:</font> " + barcode
+        barcodeResult.text = Html.fromHtml(barcodeTextHtml)
         var productName = findViewById<TextView>(R.id.nameText)
         var resultLayout = findViewById<LinearLayout>(R.id.resultLayout)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //getting data from database
         var db = FirebaseFirestore.getInstance();
@@ -39,7 +41,8 @@ class Result : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     var data = document.data
-                    productName.text = document.data.get("name").toString()
+                    var nameTextHtml = "<font color="+textExtraColor+">Name:</font> " + document.data.get("name").toString()
+                    productName.text = Html.fromHtml(nameTextHtml)
 
                     //for each element adding to layout bar, description, type, (photo)
                     var divider = View(this)
@@ -49,17 +52,23 @@ class Result : AppCompatActivity() {
                     )
                     divider.layoutParams = params
                     divider.updateLayoutParams {
-                        height = 1
+                        height = 3
                     }
-                    divider.setBackgroundColor(resources.getColor(R.color.colorDivider))
+                    divider.setBackgroundColor(resources.getColor(R.color.secondaryColor))
+                    //divider.setPadding(0, 0, 0, getResources().getDimension(R.dimen.paddingSmall).toInt())
+                    Log.i("TAG", getResources().getDimension(R.dimen.paddingSmall).toInt().toString())
                     resultLayout.addView(divider)
                     var description = TextView(this)
-                    description.text = document.data.get("description").toString()
+                    var descriptionTextHtml = "<font color="+textExtraColor+">Description:</font> " + document.data.get("description").toString()
+                    description.text = Html.fromHtml(descriptionTextHtml)
+                    description.setPadding(0, getResources().getDimension(R.dimen.paddingSmall).toInt(), 0, 0)
                     resultLayout.addView(description)
                     var type = TextView(this)
-                    type.text = document.data.get("type").toString()
+                    var typeTextHtml = "<font color="+textExtraColor+">Bin:</font> " + document.data.get("type").toString()
+                    type.text = Html.fromHtml(typeTextHtml)
                     resultLayout.addView(type)
                     var picture = ImageView(this)
+                    picture.setPadding(0, getResources().getDimension(R.dimen.paddingSmall).toInt(), 0, getResources().getDimension(R.dimen.paddingSmall).toInt())
                     resultLayout.addView(picture)
                     var picUrl = document.data.get("address")
                     Glide.with(getApplicationContext()).load(picUrl).into(picture)
@@ -70,7 +79,7 @@ class Result : AppCompatActivity() {
             }
     }
 
-    fun goBack(v : View){
+    fun goBack(v: View?){
         var intent = Intent(this, MainActivity::class.java)
         startActivityForResult(intent, 0)
     }
